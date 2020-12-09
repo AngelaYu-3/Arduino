@@ -30,12 +30,13 @@ void driveTo(double distance, double motorSpeed){
       currTicks += (encoders.getCountsAndResetLeft() + encoders.getCountsAndResetRight())/2;
       currDist = currTicks * TICKS_TO_DIST;
       lcd.clear();
-      lcd.print(currDist);
+      
       delay(2);
     }
 
     motors.setSpeeds(0, 0);
     //lcd.clear();
+    lcd.print(currDist);
     delay(200);
     /*lcd.print("target reached!");
     
@@ -50,10 +51,10 @@ void loop() {
   bool isPressed = buttonA.isPressed();
   
   if(isPressed){   
-      driveTo(30, 80);  //30 cm forwards
-      driveTo(15, -80); //15 cm backwards
-      driveTo(7.5, 60); //7.5 cm forwards
-      driveTo(3.75, -60); //3.75 cm backwards
+      driveTo(30, 100);  //30 cm forwards
+      driveTo(15, -100); //15 cm backwards
+      driveTo(7.5, 100); //7.5 cm forwards
+      driveTo(3.75, -100); //3.75 cm backwards
       
   }
 }
