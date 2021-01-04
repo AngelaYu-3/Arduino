@@ -51,10 +51,10 @@ void loop() {
   bool isPressed = buttonA.isPressed();
   
   if(isPressed){   
-      driveTo(30, 100);  //30 cm forwards
-      driveTo(15, -100); //15 cm backwards
-      driveTo(7.5, 100); //7.5 cm forwards
-      driveTo(3.75, -100); //3.75 cm backwards
+      driveTo(30, 200);  //30 cm forwards
+      driveTo(15, -200); //15 cm backwards
+      driveTo(7.5, 200); //7.5 cm forwards
+      driveTo(3.75, -200); //3.75 cm backwards
       
   }
 }

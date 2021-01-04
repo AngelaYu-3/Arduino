@@ -10,8 +10,8 @@ Zumo32U4ButtonA buttonA;
 Zumo32U4LCD lcd;
 
 int lastError = 0;
-double kP = 0.6;
-int kD = 7;
+//double kP = 0.25;
+//int kD = 6;
 
 #define NUM_SENSORS 5
 unsigned int lineSensorValues[NUM_SENSORS];
@@ -57,7 +57,7 @@ void loop()
 
   int16_t error = position - 2000; 
 
-  int16_t speedDifference = (error * kP) + (kD * (error - lastError));
+  int speedDifference = error / 3 + 7 * (error - lastError);
 
   lastError = error;
 
@@ -70,8 +70,8 @@ void loop()
   // else it will be stationary.  For some applications, you
   // might want to allow the motor speed to go negative so that
   // it can spin in reverse.
-  leftSpeed = constrain(leftSpeed, -100, (int16_t)maxSpeed);
-  rightSpeed = constrain(rightSpeed, -100, (int16_t)maxSpeed);
+  leftSpeed = constrain(leftSpeed, 0, (int16_t)maxSpeed);
+  rightSpeed = constrain(rightSpeed, 0, (int16_t)maxSpeed);
 
   motors.setSpeeds(leftSpeed, rightSpeed);
 }

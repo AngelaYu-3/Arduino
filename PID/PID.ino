@@ -7,17 +7,17 @@ Zumo32U4Encoders encoders;
 Zumo32U4Motors motors;
 
 double TICKS_TO_DIST = 0.013614; 
-double target = 30; //30 cm
-double kP = 12;
-double kI = 2.3;
-double kD = 1;
-double lastError = target;
-double previousTime = 0;
-double integralTerm = 0;
-double derivativeTerm = 0;
-double timeInterval = 0;
+double RPM_TO_CMS = 0.136;
+double target = 60; //60 cm
+double kP = 30; //60 5.32 s
+double kI = 1.7;
+double kD = 0;
+double pastTime = 0;
+double lastError;
 double error;
-int power = 0;
+double errorSum;
+double errorRate;
+double motorSpeed;
 
 void setup() {
   // put your setup code here, to run once:
@@ -31,25 +31,33 @@ double getDistance(){
   return ticks * TICKS_TO_DIST;
 }
 
+void move(double distance){
+  double ticks = (encoders.getCountsLeft() + encoders.getCountsRight())/2;
+  while(ticks * TICKS_TO_DIST < distance){
+    motors.setSpeeds(200, 200);
+    ticks = (encoders.getCountsLeft() + encoders.getCountsRight())/2;
+  }
+  motors.setSpeeds(0,0);
+  exit(0);
+}
+
 void loop() {
   // put your main code here, to run repeatedly:
+
+  error = target - getDistance();
+  lastError = error;
+
+  lcd.print(getDistance());
+  delay(500);
+  lcd.clear();
+
+  double currTime = millis() * .001;
+  double elapsedTime = currTime - pastTime;
+  pastTime = currTime;
   
-    error = target - getDistance();
-    timeInterval = (millis() - previousTime) * .001; // in seconds
-    integralTerm += (error * timeInterval);
-    derivativeTerm = (error - lastError)/timeInterval;
+  errorSum += error * elapsedTime; 
 
-    power = (int)(error * kP) + (int)(integralTerm * kI) + (int)(derivativeTerm * kD);
+  motorSpeed = ((kP * error) + (kI * errorSum)) * RPM_TO_CMS;
 
-  if(error > 0.1){
-    motors.setSpeeds(power, power);
-
-    previousTime = millis();
-    lastError = target - getDistance();
-  }else{
-    motors.setSpeeds(0, 0);
-    lcd.print(getDistance());
-  }
-    
- 
+  motors.setSpeeds(motorSpeed, motorSpeed);
 }
